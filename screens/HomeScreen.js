@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SideMenu, List, ListItem, Button } from 'react-native-elements'
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
@@ -17,18 +18,52 @@ export default class HomeScreen extends React.Component {
     title: 'Idea Bucket',
   };
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Text style={styles.getStartedText}>
-              Welcome to the Idea Bucket!
-            </Text>
-          </View>
+  constructor () {
+    super()
+    this.state = {
+      isOpen: false
+    }
+    this.toggleSideMenu = this.toggleSideMenu.bind(this)
+  }
 
-        </ScrollView>
+  toggleSideMenu () {
+    this.setState({
+      isOpen: !this.state.isOpen
+    })
+  }
+
+  render() {
+    const MenuComponent = (
+      <View style={{flex: 1, backgroundColor: '#ededed', paddingTop: 50}}>
+        <List containerStyle={{marginBottom: 20}}>
+        {
+            <ListItem
+              roundAvatar
+              key='1'
+              title='Coastal Pines'
+              subtitle='Technology Workspace'
+            />
+        }
+        </List>
       </View>
+    )
+    return (
+      <SideMenu
+        isOpen={this.state.isOpen}
+        menu={MenuComponent}>
+        <View style={styles.container}>
+          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+            <View style={styles.welcomeContainer}>
+              <Text style={styles.getStartedText}>
+                Welcome to the Idea Bucket!
+              </Text>
+              <Button
+              onPress={this.toggleSideMenu.bind(this)}
+              title='BUTTON' />
+            </View>
+          </ScrollView>
+        </View>
+      </SideMenu>
     );
   }
 
