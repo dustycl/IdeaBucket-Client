@@ -48,22 +48,22 @@ export default class HomeScreen extends React.Component {
       </View>
     )
     return (
-      <SideMenu
-        isOpen={this.state.isOpen}
-        menu={MenuComponent}>
-        <View style={styles.container}>
-          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <View style={styles.welcomeContainer}>
-              <Text style={styles.getStartedText}>
-                Welcome to the Idea Bucket!
-              </Text>
-              <Button
-              onPress={this.toggleSideMenu.bind(this)}
-              title='BUTTON' />
-            </View>
-          </ScrollView>
-        </View>
-      </SideMenu>
+      // <SideMenu
+      //   isOpen={this.state.isOpen}
+      //   menu={MenuComponent}>
+      //   <View style={styles.container}>
+      //     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      //       <View style={styles.welcomeContainer}>
+      //         <Text style={styles.getStartedText}>
+      //           Welcome to the Idea Bucket!
+      //         </Text>
+      //         <Button
+      //         onPress={this.toggleSideMenu.bind(this)}
+      //         title='BUTTON' />
+      //       </View>
+      //     </ScrollView>
+      //   </View>
+      // </SideMenu>
     );
   }
 
