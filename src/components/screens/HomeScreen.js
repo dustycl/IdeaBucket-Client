@@ -1,17 +1,15 @@
 import React from 'react';
 import {
-  Image,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import { SideMenu, List, ListItem, Button } from 'react-native-elements'
+import { Button } from 'react-native-elements'
 import { WebBrowser } from 'expo';
 
-import { MonoText } from '../components/StyledText';
+import { MonoText } from '../StyledText';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -33,37 +31,19 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    const MenuComponent = (
-      <View style={{flex: 1, backgroundColor: '#ededed', paddingTop: 50}}>
-        <List containerStyle={{marginBottom: 20}}>
-        {
-            <ListItem
-              roundAvatar
-              key='1'
-              title='Coastal Pines'
-              subtitle='Technology Workspace'
-            />
-        }
-        </List>
-      </View>
-    )
     return (
-      // <SideMenu
-      //   isOpen={this.state.isOpen}
-      //   menu={MenuComponent}>
-      //   <View style={styles.container}>
-      //     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      //       <View style={styles.welcomeContainer}>
-      //         <Text style={styles.getStartedText}>
-      //           Welcome to the Idea Bucket!
-      //         </Text>
-      //         <Button
-      //         onPress={this.toggleSideMenu.bind(this)}
-      //         title='BUTTON' />
-      //       </View>
-      //     </ScrollView>
-      //   </View>
-      // </SideMenu>
+        <View style={styles.container}>
+          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+            <View style={styles.welcomeContainer}>
+              <Text style={styles.getStartedText}>
+                Welcome to the Idea Bucket!
+              </Text>
+              <Button
+              onPress={this.toggleSideMenu.bind(this)}
+              title='BUTTON' />
+            </View>
+          </ScrollView>
+        </View>
     );
   }
 
