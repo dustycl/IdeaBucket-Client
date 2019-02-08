@@ -12,7 +12,7 @@ import {
 import { CardSection, Input } from '../common';
 import { Button } from 'react-native-elements'
 import { WebBrowser } from 'expo';
-import { sendInstallationId, teamInfo, emailChanged, passwordChanged, apiTest, createProject, updateProject, deleteProject } from '../../actions';
+import { sendInstallationId, teamInfo, projectNameChanged, projectDescriptionChanged, readProjects, createProject, updateProject, deleteProject } from '../../actions';
 
 
 
@@ -30,16 +30,17 @@ class HomeScreen extends Component {
     }
   }
 
-onEmailChange(text) {
-  this.props.emailChanged(text);
+projectName(text) {
+  this.props.projectNameChanged(text);
 }
 
-onPasswordChange(text) {
-  this.props.passwordChanged(text);
+projectDescription(text) {
+  this.props.projectDescriptionChanged(text);
 }
 
-testApi() {
-  this.props.apiTest();
+readProjects() {
+  const { team_id } = this.props
+  this.props.readProjects(team_id);
 }
 
 createProject() {
@@ -58,39 +59,29 @@ deleteProject() {
 }
 
 teamInfo() {
-  this.props.teamInfo();
+  const { team_id } = this.props
+  this.props.teamInfo(team_id);
 }
 
 componentDidMount(){
   const queryString = require('query-string');
-  // var getParams = function (url) {
-  //     var params = {};
-  //     var parser = document.createElement('a');
-  //     parser.href = url;
-  //     var query = parser.search.substring(1);
-  //     var vars = query.split('&');
-  //     for (var i = 0; i < vars.length; i++) {
-  //         var pair = vars[i].split('=');
-  //         params[pair[0]] = decodeURIComponent(pair[1]);
-  //     }
-  //     return params;
-  // };
-
-  const url = 'https://ideabucket.herokuapp.com/qr_code_image/?team_id=MEGULO_TEAM&user_id=MEGULO_USER';
-  const output = queryString.parseUrl(url);
-
-  const team_id = output.query.team_id;
-  const user_id = output.query.user_id;
-  const installationId = Expo.Constants.installationId;
-  console.log(team_id);
-  console.log(user_id);
-  console.log(installationId);
-  this.props.sendInstallationId(installationId);
   Linking.getInitialURL().then((url) => {
     if (url) {
       console.log('Initial url is: ' + url);
+      const output = queryString.parseUrl(url);
+      // const team_id = output.query.team_id;
+      // const user_id = output.query.user_id;
+      const team_id = "TC5SSBGH4";
+      const user_id = 'UC5SSBGUW';
+      const installationId = Expo.Constants.installationId;
+      console.log(team_id);
+      console.log(user_id);
+      console.log(installationId);
+      this.props.sendInstallationId(installationId, user_id, team_id);
     }
   }).catch(err => console.error('An error occurred', err));
+
+
 }
 
   render() {
@@ -106,8 +97,8 @@ componentDidMount(){
                     <Input
                       label="Name"
                       placeholder="Awesome Project"
-                      onChangeText={this.onEmailChange.bind(this)}
-                      value={this.props.email}
+                      onChangeText={this.projectName.bind(this)}
+                      value={this.props.project_name}
                       style={{backgroundColor:'#fff'}}
                     />
                   </CardSection>
@@ -116,14 +107,14 @@ componentDidMount(){
                       label="Description"
                       placeholder="An awesome app..."
                       secureTextEntry={true}
-                      onChangeText={this.onPasswordChange.bind(this)}
-                      value={this.props.password}
+                      onChangeText={this.projectDescription.bind(this)}
+                      value={this.props.project_description}
                       style={{backgroundColor:'#fff'}}
                     />
                   </CardSection>
                 </View>
               <Button
-              onPress={this.testApi.bind(this)}
+              onPress={this.readProjects.bind(this)}
               title='READ' />
               <Button
               onPress={this.createProject.bind(this)}
@@ -271,8 +262,8 @@ HomeScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  const { email, password } = state.auth;
-  return { email, password };
+  const { project_name, project_description, team_id } = state.auth;
+  return { project_name, project_description, team_id };
 };
 
-export default connect(mapStateToProps,{ sendInstallationId, teamInfo, emailChanged, passwordChanged, apiTest, createProject, updateProject, deleteProject })(HomeScreen);
+export default connect(mapStateToProps,{ sendInstallationId, teamInfo, projectNameChanged, projectDescriptionChanged, readProjects, createProject, updateProject, deleteProject })(HomeScreen);
