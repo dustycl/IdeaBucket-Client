@@ -10,7 +10,7 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
       <TextInput
         secureTextEntry={secureTextEntry}
         placeholder={placeholder}
-        placeholderTextColor='rgba(224, 0, 48, .4)'
+        placeholderTextColor='rgba(0,197,205,0.4)'
         autoCorrect={false}
         style={inputStyle}
         value={value}
@@ -25,15 +25,15 @@ const styles = {
     color: '#000',
     paddingRight: 5,
     paddingLeft: 5,
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 23,
     flex: 2
   },
   labelStyle: {
-    fontSize: 18,
+    fontSize: 16,
     paddingLeft: 20,
     flex: 1,
-    color: 'rgba(224, 0, 48, 1)'
+    color: 'rgba(0,197,205,1)'
   },
   containerStyle: {
     height: 40,

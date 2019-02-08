@@ -1,4 +1,3 @@
-import { Actions } from 'react-native-router-flux';
 import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
@@ -12,6 +11,45 @@ import {
   LAST_NAME_CHANGED,
   AGE_CHANGED
 } from './types';
+
+export const sendInstallationId = (id) => {
+  return () => {
+      fetch('https://ideabucket.herokuapp.com/device/update/', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(
+        {
+          'device_id': id,
+          'user_id': 'UC5SSBGUW'
+        } ),
+      })
+      .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          })
+  };
+};
+
+export const teamInfo = () => {
+  return () => {
+      fetch('https://ideabucket.herokuapp.com/slack/team_info/', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(
+        {
+          'team_id': 'TC5SSBGH4'
+        } ),
+      })
+      .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          })
+  };
+};
 
 export const emailChanged = (text) => {
   return{
@@ -48,10 +86,8 @@ export const ageChanged = (value) => {
   };
 };
 
-export const loginUser = (email) => {
-  return (dispatch) => {
-    dispatch({ type: LOGIN_USER, payload: email })
-
+export const apiTest = () => {
+  return () => {
       fetch('https://ideabucket.herokuapp.com/project/read/', {
         method: 'POST',
         headers: {
@@ -59,7 +95,7 @@ export const loginUser = (email) => {
         },
         body: JSON.stringify(
         {
-          'team_id' : 'TC5SSBGH4',
+          'team_id' : 'TC5SSBGH4'
         } ),
       })
       .then((response) => response.json())
@@ -68,6 +104,60 @@ export const loginUser = (email) => {
           })
   };
 };
+
+export const createProject = (email, password) => {
+  return () => {
+      fetch('https://ideabucket.herokuapp.com/project/create/', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(
+        {
+          'project_name': email,
+          'project_description': password,
+          'username': 'jmbrenna',
+          'team_id' : 'TC5SSBGH4'
+        } ),
+      })
+  };
+};
+
+export const updateProject = (email, password) => {
+  return () => {
+      fetch('https://ideabucket.herokuapp.com/project/update/', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(
+        {
+          'username': 'jmbrenna',
+          'project_name': email,
+          'project_description': password,
+          'project_status': 'O',
+          'project_vote_count': 4
+        } ),
+      })
+  };
+};
+
+export const deleteProject = (email) => {
+  return () => {
+      fetch('https://ideabucket.herokuapp.com/project/delete/', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(
+        {
+          'project_name': email,
+          'username': 'jmbrenna'
+        } ),
+      })
+  };
+};
+
 
 export const signupUser = (email, first_name, last_name, age, favorite_team) => {
   return (dispatch) => {
@@ -104,7 +194,7 @@ export const loginUserFail = (dispatch, new_user) => {
     payload: new_user
    });
 
-  Actions.signup();
+  // Actions.signup();
 };
 
 
@@ -138,7 +228,7 @@ export const loginUserSuccess = (dispatch, user) => {
           return( games )
           })
 
-    Actions.main();
+    // Actions.main();
   };
 };
 
