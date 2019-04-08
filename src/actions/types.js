@@ -1,3 +1,11 @@
 export const PROJECT_NAME_CHANGED = 'project_name_changed';
+export const FIRST_NAME_CHANGED = 'first_name_changed';
+export const LAST_NAME_CHANGED = 'last_name_changed';
+export const PHONE_NUMBER_CHANGED = 'phone_number_changed';
+export const AMOUNT_CHANGED = 'amount_changed';
 export const PROJECT_DESCRIPTION_CHANGED = 'project_description_changed';
 export const TEAM_ID = 'team_id';
+export const ACCESS_TOKEN = 'access_token';
+export const TEAM_INFO = 'team_info';
+export const USERNAME = 'username';
+export const PROJECT_LIST = 'project_list';

@@ -36,7 +36,7 @@ const styles = {
     color: 'rgba(0,197,205,1)'
   },
   containerStyle: {
-    height: 40,
+    height: 60,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',

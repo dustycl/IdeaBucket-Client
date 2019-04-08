@@ -3,134 +3,229 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   View,
-  Linking
+  Linking,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 import { CardSection, Input } from '../common';
-import { Button } from 'react-native-elements'
+import ListItem from '../common/ListItem';
+import { Button, Icon } from 'react-native-elements';
+import { LinearGradient } from 'expo'
 import { WebBrowser } from 'expo';
-import { sendInstallationId, teamInfo, projectNameChanged, projectDescriptionChanged, readProjects, createProject, updateProject, deleteProject } from '../../actions';
+import { firstChanged, lastChanged, phoneChanged, amountChanged, sendInstallationId, teamInfo, projectNameChanged, projectDescriptionChanged, readProjects, createNewAccount, updateProject, deleteProject } from '../../actions';
 
 
-
-import { MonoText } from '../StyledText';
 
 class HomeScreen extends Component {
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
   static navigationOptions = {
-    title: 'Idea Bucket',
+    title: 'MyTab',
+    headerRight: (
+        <Button
+          icon={{
+            name: "add",
+            size: 30,
+            color: '#00c5cd'
+          }}
+          type="clear"
+        />
+      ),
+    headerLeft: (
+        <Button
+          icon={{
+            name: "menu",
+            size: 30,
+            color: '#00c5cd'
+          }}
+          type="clear"
+        />
+      )
   };
 
   constructor () {
     super()
     this.state = {
-      isOpen: false
+      isOpen: false,
+      modalVisible: false
     }
   }
 
-projectName(text) {
-  this.props.projectNameChanged(text);
+projectName(project_name) {
+  this.props.projectNameChanged(project_name);
 }
 
-projectDescription(text) {
-  this.props.projectDescriptionChanged(text);
+onFirstNameChange(text) {
+    this.props.firstChanged(text);
+  }
+
+onLastNameChange(text) {
+    this.props.lastChanged(text);
+  }
+
+onPhoneNumberChange(text) {
+    this.props.phoneChanged(text);
+  }
+
+onAmountChange(text) {
+    this.props.amountChanged(text);
+  }
+
+projectDescription(project_description) {
+  this.props.projectDescriptionChanged(project_description);
 }
 
-readProjects() {
-  const { team_id } = this.props
-  this.props.readProjects(team_id);
-}
-
-createProject() {
-  const { email, password } = this.props
-  this.props.createProject(email, password);
+createNewAccount() {
+  const { first_name, last_name, phone_number, amount } = this.props
+  this.props.createNewAccount(first_name, last_name, phone_number, amount);
 }
 
 updateProject() {
-  const { email, password } = this.props
-  this.props.updateProject(email, password);
+  const { project_name, project_description, access_token, username, team_id } = this.props
+  this.props.updateProject(project_name, project_description, access_token, username, team_id);
 }
 
 deleteProject() {
-  const { email } = this.props
-  this.props.deleteProject(email);
+  const { project_name, access_token, username } = this.props
+  this.props.deleteProject(project_name, access_token, username);
 }
 
-teamInfo() {
-  const { team_id } = this.props
-  this.props.teamInfo(team_id);
+buttonPressed() {
+  console.log(this.props.team_info.workspace_logo);
+  return <Image
+    style={{width: 50, height: 50}}
+    source={{uri: this.props.team_info.workspace_logo}}
+  />;
 }
 
 componentDidMount(){
+
   const queryString = require('query-string');
   Linking.getInitialURL().then((url) => {
     if (url) {
       console.log('Initial url is: ' + url);
       const output = queryString.parseUrl(url);
-      // const team_id = output.query.team_id;
-      // const user_id = output.query.user_id;
-      const team_id = "TC5SSBGH4";
-      const user_id = 'UC5SSBGUW';
+      const team_id = output.query.team_id;
+      const user_id = output.query.user_id;
       const installationId = Expo.Constants.installationId;
-      console.log(team_id);
-      console.log(user_id);
-      console.log(installationId);
       this.props.sendInstallationId(installationId, user_id, team_id);
     }
   }).catch(err => console.error('An error occurred', err));
+}
 
 
+
+renderRow(project) {
+  return <ListItem project={project.item} />;
 }
 
   render() {
     return (
-        <View style={styles.container}>
-          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <View style={styles.welcomeContainer}>
-              <Text style={styles.getStartedText}>
-                Welcome to the Idea Bucket!
-              </Text>
-                <View style={{width:300, alignSelf: 'center'}}>
-                  <CardSection style={{backgroundColor:'rgba(224, 0, 48, 0)', borderBottomWidth: 0}}>
-                    <Input
-                      label="Name"
-                      placeholder="Awesome Project"
-                      onChangeText={this.projectName.bind(this)}
-                      value={this.props.project_name}
-                      style={{backgroundColor:'#fff'}}
-                    />
-                  </CardSection>
-                  <CardSection style={{backgroundColor:'rgba(224, 0, 48, 0)', borderBottomWidth: 0}}>
-                    <Input
-                      label="Description"
-                      placeholder="An awesome app..."
-                      secureTextEntry={true}
-                      onChangeText={this.projectDescription.bind(this)}
-                      value={this.props.project_description}
-                      style={{backgroundColor:'#fff'}}
-                    />
-                  </CardSection>
-                </View>
-              <Button
-              onPress={this.readProjects.bind(this)}
-              title='READ' />
-              <Button
-              onPress={this.createProject.bind(this)}
-              title='CREATE' />
-              <Button
-              onPress={this.updateProject.bind(this)}
-              title='UPDATE' />
-              <Button
-              onPress={this.deleteProject.bind(this)}
-              title='DELETE' />
-              <Button
-              onPress={this.teamInfo.bind(this)}
-              title='TEAM INFO' />
-            </View>
-          </ScrollView>
-        </View>
+        <KeyboardAvoidingView style={{backgroundColor:'#00c5cd', flex:1, flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch',}} behavior="padding" enabled>
+          <View style={{ alignSelf: 'center', flex:1, justifyContent:'center'}}>
+            <Modal
+               animationType="slide"
+               transparent={true}
+               visible={this.state.modalVisible}
+               onRequestClose={() => {
+                 Alert.alert('Modal has been closed.');
+               }}>
+               <View style={{backgroundColor:'rgba(0,0,0,0.65)', flex:1, justifyContent:'center', alignItems:'center'}}>
+                 <View style={{backgroundColor:'rgba(255,255,255,1)', alignSelf:'center', justifyContent:'center', alignItems:'center', width:'90%', height:'45%', borderRadius:6}}>
+                   <Text style={{fontSize:20,fontWeight: 'bold', marginBottom:20}}>Check before submitting!</Text>
+                   <Text style={{fontSize:16}}>First Name: {this.props.first_name}</Text>
+                   <Text style={{fontSize:16}}>Last Name: {this.props.last_name}</Text>
+                   <Text style={{fontSize:16}}>Phone Number: {this.props.phone_number}</Text>
+                   <Text style={{fontSize:16}}>Amount: ${this.props.amount}</Text>
+                   <View style={{borderTopWidth:1, width:'85%', borderColor:'rgba(112,112,112,0.35)', marginTop:'7%', marginBottom:'5%'}}>
+                   </View>
+                   <View style={{flexDirection: 'row', justifyContent:'space-around', width:'65%'}}>
+                    <View>
+                       <Button
+                         title="Cancel"
+                         buttonStyle={{backgroundColor: 'red', width: 100, height: 50}}
+                         onPress={() => {
+                           this.setModalVisible(!this.state.modalVisible);
+                         }}
+                       />
+                     </View>
+                     <View>
+                       <Button
+                         title="Confirm"
+                         buttonStyle={{borderColor: 'green', borderWidth:1, width: 100, height: 50}}
+                         titleStyle={{color:'green'}}
+                         type="outline"
+                         onPress={() => {
+                           this.createNewAccount();
+                         }}
+                       />
+                     </View>
+                   </View>
+                 </View>
+               </View>
+             </Modal>
+
+            <CardSection style={{backgroundColor:'rgba(224, 0, 48, 0)', width:'90%', height:'14%', borderBottomWidth: 0}}>
+              <Input
+                label="First Name"
+                placeholder="Megulo"
+                onChangeText={this.onFirstNameChange.bind(this)}
+                value={this.props.first_name}
+                style={{backgroundColor:'#fff'}}
+              />
+            </CardSection>
+            <CardSection style={{backgroundColor:'rgba(224, 0, 48, 0)', width:'90%', height:'14%', borderBottomWidth: 0}}>
+              <Input
+                label="Last Name"
+                placeholder="Abebe"
+                onChangeText={this.onLastNameChange.bind(this)}
+                value={this.props.last_name}
+                style={{backgroundColor:'#fff'}}
+              />
+            </CardSection>
+            <CardSection style={{backgroundColor:'rgba(224, 0, 48, 0)', width:'90%', height:'14%', borderBottomWidth: 0}}>
+              <Input
+                label="Phone Number"
+                placeholder="(555) 555-5555"
+                onChangeText={this.onPhoneNumberChange.bind(this)}
+                value={this.props.phone_number}
+                style={{backgroundColor:'#fff'}}
+              />
+            </CardSection>
+            <CardSection style={{backgroundColor:'rgba(224, 0, 48, 0)', width:'90%', height:'14%', borderBottomWidth: 0}}>
+              <Input
+                label="Amount ($)"
+                placeholder= "$0.00"
+                onChangeText={this.onAmountChange.bind(this)}
+                value={this.props.amount}
+                style={{backgroundColor:'#fff'}}
+              />
+            </CardSection>
+            <Button
+              title="Create Account"
+              buttonStyle={{height:65, marginTop:40}}
+              onPress={() => {
+                this.setModalVisible(true);
+              }}
+              ViewComponent={LinearGradient}
+              linearGradientProps={{
+                colors: ['#58CCC4', 'rgba(44,144,137,1)','#194D49'],
+                start: { x: 0.5, y: 0 },
+                end: { x: 0.5, y: 1 },
+              }}
+            />
+          </View>
+        </KeyboardAvoidingView>
     );
   }
 
@@ -261,9 +356,11 @@ HomeScreen.propTypes = {
 
 };
 
+
+
 const mapStateToProps = (state) => {
-  const { project_name, project_description, team_id } = state.auth;
-  return { project_name, project_description, team_id };
+  const { project_name, first_name, last_name, phone_number, amount, project_description, team_id, access_token, username, project_list, team_info } = state.auth;
+  return { project_name, first_name, last_name, phone_number, amount, project_description, team_id, access_token, username, project_list, team_info };
 };
 
-export default connect(mapStateToProps,{ sendInstallationId, teamInfo, projectNameChanged, projectDescriptionChanged, readProjects, createProject, updateProject, deleteProject })(HomeScreen);
+export default connect(mapStateToProps,{ sendInstallationId, teamInfo, projectNameChanged, firstChanged, lastChanged, phoneChanged, amountChanged, projectDescriptionChanged, readProjects, createNewAccount, updateProject, deleteProject })(HomeScreen);
