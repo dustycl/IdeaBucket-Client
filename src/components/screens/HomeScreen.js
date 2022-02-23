@@ -17,8 +17,8 @@ import {
 import { CardSection, Input } from '../common';
 import ListItem from '../common/ListItem';
 import { Button, Icon } from 'react-native-elements';
-import { LinearGradient } from 'expo'
-import { WebBrowser } from 'expo';
+import * as WebBrowser from 'expo-web-browser';
+import { LinearGradient } from 'expo-linear-gradient';
 import { firstChanged, lastChanged, phoneChanged, amountChanged, sendInstallationId, teamInfo, projectNameChanged, projectDescriptionChanged, readProjects, createNewAccount, updateProject, deleteProject } from '../../actions';
 
 
